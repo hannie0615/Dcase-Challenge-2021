@@ -1,6 +1,6 @@
 # Dcase-Challenge-2021
 
-dcase 2021 챌린지에서 음성 분류 모델을 참고합니다.
+dcase 2021 챌린지에서 음성 분류 모델을 참고합니다.  
 task1, task4의 baselilne을 실행하고, 각 모델을 튜닝합니다. 
 
 ## Task1 - task A : Acoustic Scnene Classification
