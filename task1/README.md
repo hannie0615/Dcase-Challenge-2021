@@ -1,7 +1,7 @@
 DCASE2021 - Task 1 A - Baseline systems
 -------------------------------------
 
-Author:
+저자:
 **Irene Martin**, *Tampere University* 
 [Email](mailto:irene.martinmorato@tuni.fi). 
 Adaptations from the original code DCASE2020 - Task 1 by
@@ -12,58 +12,74 @@ Getting started
 ===============
 
 1. Clone repository from [Github](https://github.com/marmoi/dcase2021_task1a_baseline).
-2. Install requirements with command: `pip install -r requirements.txt`.
-3. Run the task specific application with default settings for two model quantization:
-   - keras model: `python task1a.py` or  `./task1a.py`
+2. 라이브러리 설치: `pip install -r requirements.txt`.
+3. model quantization에 따라 다음의 2가지로 실행할 수 있음 :  
+   - keras model(deault): `python task1a.py` or  `./task1a.py`
    - TFLite: `python task1a_tflite.py` or  `./task1a_tflite.py`
 
 ### Anaconda installation
 
-To setup Anaconda environment for the system use following:
+To setup Anaconda environment : 
 
-	conda create --name tf2-dcase python=3.6
-	conda activate tf2-dcase
-	conda install ipython
-	conda install numpy
-	conda install tensorflow-gpu=2.1.0
-	conda install -c anaconda cudatoolkit
-	conda install -c anaconda cudnn
-	pip install librosa
-	pip install absl-py==0.9.0
-	pip install sed_eval
-	pip install pyyaml==5.3.1
+```
+# 작업 환경 
+tensorflow-gpu               2.4.0
+tensorflow                   2.4.0
+cudatoolkit                  11.3
+cudnn                        8.1 
+Python                       3.6.8
+
+# anaconda 환경 설정하기
+conda create -n dcase1 python=3.6 # 가상환경 생성
+conda activate dcase1 # 가상환경 활성화
+conda deactivate # 가상환경 비활성화
+
+# 라이브러리 다운받기
+conda install ipython
+conda install numpy
+conda install tensorflow-gpu=2.4.0
+conda install -c anaconda cudatoolkit
+conda install -c anaconda cudnn
+pip install librosa
+pip install absl-py
+pip install sed_eval
+pip install pyyaml==5.3.1
+pip install pyparsing==2.2.1
+```
 	
-**Note**: because of tensorflow 2 incompatibilities dcase_util has to be install manually with "python setup.py develop" command.
+**Note**: dcase_util 라이브러리를 사용하기 위해 tensorflow 2 설치가 필수.  
+dcase_util toolbox >= ver.0.2.16 [dcase_util](https://github.com/DCASE-REPO/dcase_util) 
+
 
 Introduction
 ============
 
-This is the baseline system for the Low-Complexity Acoustic Scene Classification with Multiple Devices (Subtask A) in Detection and Classification of Acoustic Scenes and Events 2021 (DCASE2021) challenge. The system is intended to provide a simple entry-level state-of-the-art approach that gives reasonable results. The baseline system is built on [dcase_util](https://github.com/DCASE-REPO/dcase_util) toolbox (>=version 0.2.16). 
-
-Participants can build their own systems by extending the provided baseline system. The system has all needed functionality for the dataset handling, acoustic feature storing and accessing, acoustic model training and storing, and evaluation. The modular structure of the system enables participants to modify the system to their needs. The baseline system is a good starting point especially for the entry level researchers to familiarize themselves with the acoustic scene classification problem. 
-
-If participants plan to publish their code to the DCASE community after the challenge, building their approach on the baseline system could potentially make their code more accessible to the community. DCASE organizers strongly encourage participants to share their code in any form after the challenge.
+이 베이스라인 시스템은 **Low-Complexity Acoustic Scene Classification with Multiple Devices (Subtask A) in Detection and Classification of Acoustic Scenes and Events 2021 (DCASE2021) challenge** 챌린지의 음향 이벤트 분류 과제A 에서 제공하는 시스템입니다.
 
 Description
 ========
 
 ### Subtask A - Low-Complexity Acoustic Scene Classification with Multiple Devices
 
-[TAU Urban Acoustic Scenes 2020 Mobile Development dataset](https://zenodo.org/record/3819968) is used as development dataset for this task.
++ 사용되는 데이터셋:   
+[TAU Urban Acoustic Scenes 2020 Mobile Development dataset](https://zenodo.org/record/3819968) is used.
 
-This subtask is concerned with the basic problem of acoustic scene classification, in which it is required to classify a test audio recording into one of ten known acoustic scene classes. This task targets **generalization** properties of systems across a number of different devices, and will use audio data recorded and simulated with a variety of devices. 
-Recordings in the dataset were made with three devices (A, B and C) that captured audio simultaneously and 6 simulated devices (S1-S6). Each acoustic scene has 1440 segments (240 minutes of audio) recorded with device A (main device) and 108 segments of parallel audio (18 minutes) each recorded with devices B,C, and S1-S6. The dataset contains in total 64 hours of audio. For a more detailed description see [DCASE Challenge task description](http://dcase.community/challenge2020/task-acoustic-scene-classification).
 
-The task targets low complexity solutions for the classification problem in term of model size, and uses audio recorded with a single device (device A, 48 kHz / 24bit / stereo). The data for the dataset was recorded in 10 acoustic scenes which were later grouped into three major classes used in this subtask. The dataset contains in total 40 hours of audio. For a more detailed description see [DCASE Challenge task description](http://dcase.community/challenge2020/task-acoustic-scene-classification).
+오디오는 단일 장치 A로 녹음되었습니다. (device A, 48 kHz / 24bit / stereo).  
+데이터셋은 10개의 음향 이벤트로 분류되어 있고, 총 40시간의 오디오가 포함되어 있습니다.  
+데이터셋의 오디오는 모두 10초 길이입니다.
 
-Classifier complexity for this subtask is limited to 128KB size for the non-zero parameters. This translates into 32K parameters when using float32 (32-bit float) which is often the default data type (32000 parameter values * 32 bits per parameter / 8 bits per byte= 128000 bytes = 128KB). See detailed description how to calculate model size from [DCASE Challenge task description](http://dcase.community/challenge2020/task-acoustic-scene-classification). Model calculation for Keras models is implemented in `model_size_calculation.py`
+* 챌린지에 대한 자세한 설명은 [DCASE 챌린지 과제 설명](http://dcase.community/challenge2020/task-acoustic-scene-classification)을 참조. 
+* 데이터셋에 대한 자세한 설명은 [DCASE Challenge task description](http://dcase.community/challenge2020/task-acoustic-scene-classification)을 참조.  
+* 모델 사이즈 계산에 대한 자세한 설명은 [DCASE Challenge task description](http://dcase.community/challenge2020/task-acoustic-scene-classification)을 참조.  
+* Model calculation for Keras models is implemented in `model_size_calculation.py`  
 
-The subtask specific baseline system is implemented in file `task1a.py` and `task1a_tflite.py`.
 
 #### System description
 
-The system implements a convolutional neural network (CNN) based approach, where log mel-band energies are first extracted for each 10-second signal, and a network consisting of two CNN layers and one fully connected layer is trained to assign scene labels to the audio signals. 
-Model size of the baseline when using keras model quantization is 90.82 KB and 89.82 KB when using TFLite quantization.
+시스템에서는 먼저 10초의 오디오에 대해 log mel-band 를 먼저 추출합니다.  
+두 개의 CNN layer와 한 개의 FCN layer 로 구성된 네트워크가 오디오 신호에 레이블을 할당하는 컴볼루션 신경망(CNN) 기반 접근을 구현합니다. 
+모델 사이즈는 keras quantization : 90.82 KB, TFLite quantization : 89.82 KB 입니다.  
 
 
 ##### Parameters
@@ -73,7 +89,7 @@ Model size of the baseline when using keras model quantization is 90.82 KB and 8
 - Analysis frame 40 ms (50% hop size)
 - Log mel-band energies (40 bands)
 
-###### Neural network
+###### Neural network 구조
 
 - Input shape: 40 * 500 (10 seconds)
 - Architecture:
@@ -90,11 +106,11 @@ Model size of the baseline when using keras model quantization is 90.82 KB and 8
     - Dense layer (units: 100, activation: ReLu )
     - Dropout (rate: 30%)
   - Output layer (activation: softmax/sigmoid)
-- Learning (epochs: 200, batch size: 16, data shuffling between epochs)
+- Learning (epochs: 200, batch size: 16, data shuffling=True between epochs)
   - Optimizer: Adam (learning rate: 0.001)
 - Model selection:
-  - Approximately 30% of the original training data is assigned to validation set, split done so that training and validation sets do not have segments from same location and so that both sets have similar amount of data per city
-  - Model performance after each epoch is evaluated on the validation set, and best performing model is selected
+  - train set의 약 30%가 validation set으로 할당됩니다.
+  - 매 epoch마다 validation set으로 모델 성능을 평가하고 best 모델을 선택합니다. 
   
 **Network summary**
 
@@ -146,7 +162,8 @@ Model size of the baseline when using keras model quantization is 90.82 KB and 8
   
 #### Results for development dataset
 
-The cross-validation setup provided with the *TAU Urban Acoustic Scenes 2020 Mobile Development dataset* is used to evaluate the performance of the baseline system. Results are calculated using TensorFlow in GPU mode (using Nvidia Tesla V100 GPU card). Because results produced with GPU card are generally non-deterministic, the system was trained and tested 10 times, and mean and standard deviation of the performance from these 10 independent trials are shown in the results tables.
+데이터셋 *TAU Urban Acoustic Scenes 2020 Mobile Development dataset* 이 베이스라인 평가에 사용되었습니다.   
+결과는 GPU(using Nvidia Tesla V100 GPU card) 모드로 실행된 결과이며, 10번의 테스트 후 mean값과 standard deviation값의 결과입니다.  
  
 
 | Scene label       | Log Loss |   A   |   B   |   C   |   S1  |   S2  |   S3  |   S4  |   S5  |   S6  | Accuracy|  
@@ -214,12 +231,12 @@ Usage
 
 For the subtask there are two separate application (.py file):
 
-- `task1a.py`, DCASE2021 baseline for Task 1A, with Keras model quantization
-- `task1a_tflite.py`, DCASE2021 baseline for Task 1A, with TFLite quantization
+- `task1a.py`: DCASE2021 baseline for Task 1A, **with Keras model quantization**
+- `task1a_tflite.py`: DCASE2021 baseline for Task 1A,  **with TFLite quantization**
 
 ### Application arguments
 
-All the usage arguments are shown by ``python task1a.py -h``.
+도움말이 필요할 경우:  ``python task1a.py -h``.
 
 | Argument                    |                                   | Description                                                  |
 | --------------------------- | --------------------------------- | ------------------------------------------------------------ |
@@ -237,58 +254,52 @@ All the usage arguments are shown by ``python task1a.py -h``.
 
 ### Operation modes
 
-The system can be used in three different operation modes.
-
-**Development mode** - `dev`
-
-In development mode, the development dataset is used with the provided cross-validation setup: training set is used for learning, and testing set is used for evaluating the performance of the system. This is the default operation mode. 
+**Development mode** - `dev` (default)
 
 Usage example: `python task1a.py` or `python task1a.py -m dev`
 
-**Challenge mode** - `eval` 
+**Challenge mode** - `eval` (-eval 모드는 동작하지 않음)  
 
-**Note:** This operation mode does not work yet as the evaluation dataset has not been published. 
-
-In challenge mode, the full development dataset (including training and test subsets) is used for learning, and a second dataset, evaluation dataset, is used for testing. The system system outputs are generated based on the evaluation dataset. If ground truth is available for the evaluation dataset, the output is also evaluated. This mode is designed to be used for generating the DCASE challenge submission, running the system on the evaluation dataset for generating the system outputs for the submission file. 
-
-Usage example: `python task1a.py -m eval` and `python task1b.py -m eval`
-
-To save system output to a file: `python task1a.py -m eval -o output.csv`
+시스템 결과를 csv로 저장 : `python task1a.py -m eval -o output.csv`
 
 ### System parameters
 
-The baseline system supports multi-level parameter overwriting, to enable flexible switching between different system setups. Parameter changes are tracked with hashes calculated from parameter sections. These parameter hashes are used in the storage file paths when saving data (features/embeddings, model, or results). By using this approach, the system will compute features/embeddings, models and results only once for the specific parameter set, and after that it will reuse this precomputed data.
+기준 시스템은 서로 다른 시스템 설정 간에 유연한 전환이 가능하도록 다단계 파라미터 덮어쓰기를 지원합니다. 
+매개변수 변경사항은 매개변수 섹션에서 계산된 해시를 사용하여 추적됩니다.  
+이러한 매개 변수 해시는 데이터(기능/임베딩, 모델 또는 결과)를 저장할 때 스토리지 파일 경로에 사용됩니다.  
+이 접근법을 사용하여 시스템은 특정 매개 변수 세트에 대해 형상/임베딩, 모델 및 결과를 한 번만 계산하고, 그 후 이 사전 계산된 데이터를 재사용합니다. 
+
 
 #### Parameter overwriting
 
-Parameters are stored in YAML-formatted files, which are handled internally in the system as Dict like objects (`dcase_util.containers.DCASEAppParameterContainer`). **Default parameters** is the set of all possible parameters recognized by the system. **Parameter set** is a smaller set of parameters used to overwrite values of the default parameters. This can be used to select methods for processing, or tune parameters.
+매개변수는 내부적으로 처리되어(`dcase_util.containers.DCASEAppParameterContainer`) YAML-formatted 파일에 저장됩니다.  
+
 
 #### Parameter file
 
-Parameters files are YAML-formatted files, containing the following three blocks:
+매개변수 YAML 파일은 3 block으로 구분됩니다.: 
 
 - `active_set`, default parameter set id
 - `sets`, list of dictionaries
-- `defaults`, dictionary containing default parameters which are overwritten by the `sets[active_set]`
+- `defaults`, dictionary containing default parameters which are overwritten by the `sets[active_set]`  
 
-At the top level of the parameter dictionary there are parameter sections; depending on the name of the section, the parameters inside it are processed sometimes differently. Usually there is a main section (`feature_extractor`, and method parameter section (`feature_extractor_method_parameters`) which contains parameters for each possible method. When parameters are processed, the correct method parameters are copied from method parameter section to the main section under parameters. This allows having many methods ready parametrized and easily accessible.
+섹션 이름에 따라 매개 변수 내부의 매개 변수가 다르게 처리되는 경우도 있습니다. 일반적으로 가능한 각 방법에 대한 매개 변수를 포함하는 주 섹션('feature_extractor')과 방법 매개 변수 섹션('feature_extractor_method_parameters')이 있습니다. 매개변수가 처리되면 매개변수 아래의 메소드 매개변수 섹션에서 메인 섹션으로 올바른 메소드 매개변수가 복사됩니다. 이를 통해 많은 방법이 매개 변수화되고 쉽게 접근할 수 있습니다.  
 
 #### Parameter hash
 
-Parameter hashes are MD5 hashes calculated for each parameter section. In order to make these hashes more robust, some pre-processing is applied before hash calculation:
-
-- If section contains field `enable` with value `False`, all fields inside this section are excluded from the parameter hash calculation. This will avoid recalculating the hash if the section is not used but some of these unused parameters are changed.
-- If section contains fields with value `False`, these fields are excluded from the parameter hash calculation. This will enable to add new flag parameters without changing the hash. Define the new flag such that the previous behaviour is happening when this field is set to false.
-- All `non_hashable_fields` fields are excluded from the parameter hash calculation. These fields are set when `dcase_util.containers.AppParameterContainer` is constructed, and they usually are fields used to print various values to the console. These fields do not change the system output to be saved onto disk, and hence they are excluded from hash.
+매개변수 해시는 각 매개변수 섹션에 대해 계산된 MD5 해시입니다.  
+이러한 해시를 보다 강력하게 만들기 위해 해시 계산 전에 일부 사전 처리가 적용됩니다.
 
 
 ## Extending the baseline
 
-Easiest way to extend the baseline system is by modifying system parameters. To do so one needs to create a parameter file with a custom parameter set, and run system with this parameter file.
+기준 시스템을 확장하는 가장 쉬운 방법은 시스템 매개 변수(YAML file)를 수정하는 것입니다.
+3가지의 extra.yaml 확장 모델을 예시로 제공합니다.  
 
 **Example 1**
 
-In this example, one creates MLP based system. Data processing chain is replaced with a chain which calculated mean over 500 feature vectors. Learner is replaced with a new model definition. Parameter file `extra.yaml`: 
+extra1은 MLP 기반 시스템으로 데이터 처리 체인은 500개 이상의 특징 벡터를 계산하는 체인으로 대체됩니다.  
+Parameter file `extra.yaml`: 
         
     active_set: minimal-mlp
     sets:
@@ -374,7 +385,8 @@ Command to run the system:
 
 **Example 2**
 
-In this example, one slightly modifies the baseline to have smaller network. Learner is replaced with modified model definition. Since `cnn` learner method is overloaded, only a subset of the parameters needs to be defined. However, the model config (network definition) has to be redefined fully as list parameters cannot be overloaded partly. Parameter file `extra.yaml`: 
+extra2는 네트워크 크기가 작아지도록 베이스라인을 약간 수정합니다.   
+Parameter file `extra.yaml`: 
         
     active_set: baseline-minified
     sets:
@@ -444,7 +456,8 @@ Command to run the system:
 
 **Example 3**
 
-In this example, multiple different setups are run in a sequence. Parameter file `extra.yaml`: 
+extra3에서는 kernel size=3일 때, kernel size=5일 때의 다른 설정이 순차적으로 진행됩니다.  
+Parameter file `extra.yaml`: 
         
     active_set: baseline-kernel3
     sets:
@@ -474,6 +487,7 @@ Command to run the system:
 To see results:
     
     python task1a.py --show_results
+
 
 Code
 ====
