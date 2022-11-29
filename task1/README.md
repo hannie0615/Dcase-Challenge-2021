@@ -492,7 +492,8 @@ To see results:
 Code
 ====
 
-The code is built on [dcase_util](https://github.com/DCASE-REPO/dcase_util) toolbox, see [manual for tutorials](https://dcase-repo.github.io/dcase_util/index.html). The machine learning part of the code is built on [TensorFlow (v2.1.0)](https://www.tensorflow.org/).
+코드는 python으로 작성되었으며, dcase_util와 tensorflow, pytorch 라이브러리를 사용했습니다.  
+
 
 ### File structure
 
