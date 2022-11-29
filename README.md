@@ -123,7 +123,7 @@ Evaluation
 ```
 
 
-### Baseline CNN 확장
+### Baseline CNN 확장 및 
 
 #### Layer 4
 
@@ -140,7 +140,7 @@ Input shape: 40 * 500 (10 seconds)
    CNN layer #3
         -  2D Convolutional layer (filters: 16, kernel size: 7) + Batch normalization + ReLu activation
         -  2D max pooling (pool size: (4, 4)) + Dropout (rate: 30%)
-  CNN layer #4
+   CNN layer #4
         -  2D Convolutional layer (filters: 16, kernel size: 7) + Batch normalization + ReLu activation
         -  2D max pooling (pool size: (2, 5)) + Dropout (rate: 30%)  
    Flatten
@@ -153,8 +153,7 @@ Input shape: 40 * 500 (10 seconds)
 Evaluation   
 ```
 =====================
-Logloss       | 1.909
-Accuracy      | 45.9%
+Logloss  | 1.909   Accuracy  | 45.9%
 ```
 
 #### Layer 5
@@ -172,10 +171,10 @@ Input shape: 40 * 500 (10 seconds)
    CNN layer #3
         -  2D Convolutional layer (filters: 32, kernel size: 7) + Batch normalization + ReLu activation
         -  2D max pooling (pool size: (2, 5)) + Dropout (rate: 30%)
-  CNN layer #4
+   CNN layer #4
         -  2D Convolutional layer (filters: 32, kernel size: 7) + Batch normalization + ReLu activation
         -  2D max pooling (pool size: (2, 5)) + Dropout (rate: 30%)  
-  CNN layer #5
+   CNN layer #5
         -  2D Convolutional layer (filters: 32, kernel size: 7) + Batch normalization + ReLu activation
         -  2D max pooling (pool size: (1, 2)) + Dropout (rate: 30%)  
    Flatten
@@ -188,8 +187,7 @@ Input shape: 40 * 500 (10 seconds)
 Evaluation  
 ```
 =====================
-Logloss       | 1.552
-Accuracy      | 47.1%
+Logloss  | 1.552   Accuracy  | 47.1%
 ```  
 --------  
 ## Task4 : Sound Event Detection
