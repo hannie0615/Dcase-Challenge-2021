@@ -123,7 +123,7 @@ Evaluation
 ```
 
 
-### Baseline CNN 구조 수정, 모델 튜닝 및 
+### Baseline CNN 확장
 
 #### Layer 4
 
